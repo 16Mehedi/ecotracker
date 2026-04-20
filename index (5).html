@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoTrack — Sustainable Living Hub</title>
+<!-- Fonts: system stack used (fully offline-compatible) -->
+<style>
+  :root {
+    --bg: #F5F2EB;
+    --surface: #FFFEF9;
+    --surface2: #F0EDE4;
+    --accent: #2D5A27;
+    --accent2: #6BAA48;
+    --accent-light: #E8F2E0;
+    --text: #1A1A14;
+    --text2: #5A5A4A;
+    --text3: #8A8A7A;
+    --border: #D8D4C8;
+    --danger: #C0392B;
+    --warn: #D4850A;
+    --success: #2D7A3A;
+    --radius: 12px;
+    --radius-sm: 6px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── SKIP LINK (Accessibility) ── */
+  .skip-link {
+    position: absolute; top: -40px; left: 1rem;
+    background: var(--accent); color: #fff;
+    padding: 8px 16px; border-radius: var(--radius-sm);
+    font-size: 14px; text-decoration: none; z-index: 9999;
+    transition: top 0.2s;
+  }
+  .skip-link:focus { top: 8px; }
+
+  /* ── NAVBAR ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+  .nav-logo {
+    font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+    font-size: 1.4rem; color: var(--accent);
+    text-decoration: none; display: flex; align-items: center; gap: 8px;
+  }
+  .nav-logo span { font-size: 1.5rem; }
+  .nav-links { display: flex; align-items: center; gap: 4px; }
+  .nav-links a, .nav-item > button {
+    display: flex; align-items: center; gap: 4px;
+    padding: 6px 14px; border-radius: var(--radius-sm);
+    text-decoration: none; color: var(--text2);
+    font-size: 14px; font-weight: 500;
+    border: none; background: none; cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    font-family: inherit;
+  }
+  .nav-links a:hover, .nav-item > button:hover,
+  .nav-links a:focus, .nav-item > button:focus {
+    background: var(--accent-light); color: var(--accent);
+    outline: none;
+  }
+  .nav-links a.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+  .nav-item { position: relative; }
+  .dropdown {
+    display: none; position: absolute; top: calc(100% + 8px); left: 0;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); min-width: 200px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .nav-item:hover .dropdown,
+  .nav-item:focus-within .dropdown { display: block; }
+  .dropdown a {
+    display: block; padding: 10px 16px;
+    color: var(--text2); font-size: 14px;
+    text-decoration: none; border-radius: 0;
+    transition: background 0.1s;
+  }
+  .dropdown a:hover { background: var(--accent-light); color: var(--accent); }
+  .chevron { font-size: 10px; transition: transform 0.2s; }
+  .nav-item:hover .chevron { transform: rotate(180deg); }
+  .nav-cta {
+    background: var(--accent) !important; color: #fff !important;
+    padding: 8px 18px !important; border-radius: var(--radius-sm) !important;
+  }
+  .nav-cta:hover { background: #1e3d1a !important; }
+
+  /* ── PAGES ── */
+  .page { display: none; animation: fadeIn 0.25s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── BREADCRUMB ── */
+  .breadcrumb {
+    padding: 12px 2rem;
+    font-size: 13px; color: var(--text3);
+    display: flex; align-items: center; gap: 6px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .breadcrumb a { color: var(--text3); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--accent); text-decoration: underline; }
+  .breadcrumb .sep { color: var(--border); }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+  .section { padding: 3rem 0; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--accent) 0%, #4a8a3a 100%);
+    color: #fff; text-align: center;
+    padding: 5rem 2rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='2' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E") repeat;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    margin-bottom: 1rem; position: relative;
+    line-height: 1.2;
+  }
+  .hero p { font-size: 1.1rem; opacity: 0.9; max-width: 550px; margin: 0 auto 2rem; position: relative; }
+  .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 12px 24px; border-radius: var(--radius-sm);
+    font-size: 15px; font-weight: 500; cursor: pointer;
+    border: 2px solid transparent; text-decoration: none;
+    transition: all 0.18s; font-family: inherit;
+  }
+  .btn:focus { outline: 3px solid var(--accent2); outline-offset: 2px; }
+  .btn-primary { background: #fff; color: var(--accent); border-color: #fff; }
+  .btn-primary:hover { background: var(--accent-light); }
+  .btn-outline { background: transparent; color: #fff; border-color: rgba(255,255,255,0.6); }
+  .btn-outline:hover { background: rgba(255,255,255,0.15); border-color: #fff; }
+  .btn-green { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-green:hover { background: #1e3d1a; }
+  .btn-sm { padding: 8px 16px; font-size: 13px; }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    display: flex; justify-content: center; flex-wrap: wrap;
+  }
+  .stat-item {
+    padding: 1.2rem 2rem; text-align: center;
+    border-right: 1px solid var(--border);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num { font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif; font-size: 1.8rem; color: var(--accent); }
+  .stat-label { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* ── CARDS GRID ── */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    cursor: pointer;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.08); border-color: var(--accent2); }
+  .card:focus { outline: 3px solid var(--accent2); }
+  .card-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+  .card h3 { font-size: 1.05rem; margin-bottom: 0.4rem; color: var(--text); }
+  .card p { font-size: 14px; color: var(--text2); line-height: 1.5; }
+  .card-tag {
+    display: inline-block; margin-top: 0.75rem;
+    background: var(--accent-light); color: var(--accent);
+    font-size: 11px; font-weight: 600;
+    padding: 3px 10px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+
+  /* ── SECTION TITLE ── */
+  .section-title { margin-bottom: 2rem; }
+  .section-title h2 { font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif; font-size: 1.8rem; margin-bottom: 0.4rem; }
+  .section-title p { color: var(--text2); font-size: 15px; }
+
+  /* ── TRACKER (Dashboard sub-page) ── */
+  .tracker-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  @media(max-width: 700px) { .tracker-grid { grid-template-columns: 1fr; } }
+  .tracker-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+  .tracker-card h3 { font-size: 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+  .progress-row { margin-bottom: 12px; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 13px; color: var(--text2); margin-bottom: 4px; }
+  .progress-bar { height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 4px; background: var(--accent2); transition: width 0.6s ease; }
+  .progress-fill.warn { background: var(--warn); }
+  .progress-fill.danger { background: var(--danger); }
+
+  /* ── FORM ── */
+  .form-group { margin-bottom: 1.2rem; }
+  .form-group label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; color: var(--text2); }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 10px 14px;
+    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    background: var(--surface); color: var(--text);
+    font-family: inherit; font-size: 15px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--accent2);
+    box-shadow: 0 0 0 3px rgba(107, 170, 72, 0.15);
+  }
+  .form-group input.error { border-color: var(--danger); }
+  .error-msg { color: var(--danger); font-size: 12px; margin-top: 4px; display: none; }
+  .error-msg.visible { display: block; }
+  .form-hint { font-size: 12px; color: var(--text3); margin-top: 4px; }
+
+  /* ── TOAST ── */
+  #toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+  .toast {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 18px; border-radius: var(--radius);
+    background: var(--text); color: var(--bg);
+    font-size: 14px; min-width: 260px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    animation: slideUp 0.3s ease, fadeOut 0.4s ease 2.6s forwards;
+  }
+  .toast.success { background: var(--success); }
+  .toast.error-t { background: var(--danger); }
+  .toast.warn { background: var(--warn); }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @keyframes fadeOut { to { opacity: 0; transform: translateY(10px); } }
+
+  /* ── LOADING ── */
+  .loading-spinner {
+    display: inline-block; width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
+    border-radius: 50%; animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── TABS ── */
+  .tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--border); margin-bottom: 1.5rem; }
+  .tab-btn {
+    padding: 10px 20px; border: none; background: none;
+    font-family: inherit; font-size: 14px; font-weight: 500;
+    color: var(--text3); cursor: pointer; border-bottom: 2px solid transparent;
+    margin-bottom: -2px; transition: all 0.15s;
+  }
+  .tab-btn:hover { color: var(--accent); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeIn 0.2s; }
+
+  /* ── QUIZ ── */
+  .quiz-option {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; margin-bottom: 8px;
+    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    cursor: pointer; transition: all 0.15s;
+    background: var(--surface);
+  }
+  .quiz-option:hover { border-color: var(--accent2); background: var(--accent-light); }
+  .quiz-option.selected { border-color: var(--accent); background: var(--accent-light); }
+  .quiz-option.correct { border-color: var(--success); background: #e8f5e9; }
+  .quiz-option.wrong { border-color: var(--danger); background: #fdecea; }
+  .quiz-dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; }
+  .quiz-option.selected .quiz-dot { border-color: var(--accent); background: var(--accent); }
+  .quiz-feedback { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 14px; margin-top: 8px; display: none; }
+  .quiz-feedback.visible { display: block; }
+  .quiz-feedback.correct-fb { background: #e8f5e9; color: var(--success); border: 1px solid #a5d6a7; }
+  .quiz-feedback.wrong-fb { background: #fdecea; color: var(--danger); border: 1px solid #ef9a9a; }
+
+  /* ── ACCESSIBILITY PAGE ── */
+  .hci-card {
+    border-left: 4px solid var(--accent2); padding: 1.2rem 1.5rem;
+    background: var(--surface); border-radius: 0 var(--radius) var(--radius) 0;
+    margin-bottom: 1rem;
+  }
+  .hci-card h4 { font-size: 1rem; margin-bottom: 0.4rem; color: var(--accent); }
+  .hci-card p { font-size: 14px; color: var(--text2); }
+
+  /* ── BACK BUTTON ── */
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--text3); font-size: 14px; cursor: pointer;
+    border: none; background: none; padding: 0; font-family: inherit;
+    transition: color 0.15s;
+  }
+  .back-btn:hover { color: var(--accent); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--text); color: rgba(255,255,255,0.7);
+    padding: 3rem 2rem 1.5rem; margin-top: 4rem;
+  }
+  footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+  footer a:hover { color: #fff; }
+  .footer-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+  .footer-col h4 { color: #fff; font-size: 14px; margin-bottom: 0.75rem; font-weight: 600; }
+  .footer-col a { display: block; font-size: 14px; margin-bottom: 4px; }
+  .footer-bottom { max-width: 1100px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem; font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+  /* ── TOOLTIP ── */
+  [data-tooltip] { position: relative; }
+  [data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+    background: var(--text); color: var(--bg);
+    padding: 5px 10px; border-radius: var(--radius-sm);
+    font-size: 12px; white-space: nowrap; pointer-events: none;
+    z-index: 200;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5); z-index: 500;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface); border-radius: var(--radius);
+    padding: 2rem; max-width: 480px; width: 90%;
+    animation: fadeIn 0.2s;
+  }
+  .modal h3 { font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif; font-size: 1.4rem; margin-bottom: 0.75rem; }
+  .modal p { color: var(--text2); font-size: 14px; margin-bottom: 1.5rem; }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width: 600px) {
+    nav { padding: 0 1rem; }
+    .hero { padding: 3rem 1rem; }
+    .container { padding: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+<div id="toast-container" aria-live="polite" aria-label="Notifications"></div>
+
+<!-- ── NAVIGATION (Level 1 + Level 2 via dropdowns) ── -->
+<nav role="navigation" aria-label="Main navigation">
+  <a href="#" class="nav-logo" onclick="showPage('home')" aria-label="EcoTrack Home">
+    <span aria-hidden="true">🌿</span> EcoTrack
+  </a>
+  <div class="nav-links" role="menubar">
+    <a href="#" role="menuitem" onclick="showPage('home')" id="nav-home" class="active" aria-current="page">Home</a>
+
+    <div class="nav-item" role="none">
+      <button role="menuitem" aria-haspopup="true" aria-expanded="false" onclick="showPage('dashboard')">
+        Dashboard <span class="chevron" aria-hidden="true">▾</span>
+      </button>
+      <div class="dropdown" role="menu" aria-label="Dashboard submenu">
+        <a href="#" role="menuitem" onclick="showPage('dashboard'); showTab('overview')">📊 Overview</a>
+        <a href="#" role="menuitem" onclick="showPage('dashboard'); showTab('tracker')">📈 My Tracker</a>
+        <a href="#" role="menuitem" onclick="showPage('dashboard'); showTab('goals')">🎯 Goals</a>
+      </div>
+    </div>
+
+    <div class="nav-item" role="none">
+      <button role="menuitem" aria-haspopup="true" aria-expanded="false" onclick="showPage('learn')">
+        Learn <span class="chevron" aria-hidden="true">▾</span>
+      </button>
+      <div class="dropdown" role="menu" aria-label="Learn submenu">
+        <a href="#" role="menuitem" onclick="showPage('learn'); showTab('articles')">📚 Articles</a>
+        <a href="#" role="menuitem" onclick="showPage('learn'); showTab('quiz')">🧠 Eco Quiz</a>
+        <a href="#" role="menuitem" onclick="showPage('learn'); showTab('tips')">💡 Daily Tips</a>
+      </div>
+    </div>
+
+    <a href="#" role="menuitem" onclick="showPage('about')">About</a>
+    <a href="#" role="menuitem" onclick="showPage('contact')" class="btn nav-cta btn-sm">Join Free</a>
+  </div>
+</nav>
+
+<!-- ── MAIN CONTENT ── -->
+<main id="main">
+
+<!-- ══════════════════════════════════
+     PAGE: HOME
+══════════════════════════════════ -->
+<div id="page-home" class="page active">
+  <div class="hero" role="banner">
+    <h1>Live Greener,<br>Track Smarter</h1>
+    <p>EcoTrack helps you monitor your carbon footprint, learn sustainable habits, and join a community making real change.</p>
+    <div class="hero-btns">
+      <button class="btn btn-primary" onclick="showPage('dashboard')" aria-label="Start tracking your carbon footprint">
+        🌱 Start Tracking
+      </button>
+      <button class="btn btn-outline" onclick="showPage('learn')" aria-label="Learn about sustainability">
+        📚 Learn More
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar" role="region" aria-label="Community statistics">
+    <div class="stat-item"><div class="stat-num">42k</div><div class="stat-label">Active Users</div></div>
+    <div class="stat-item"><div class="stat-num">1.2M</div><div class="stat-label">Kg CO₂ Saved</div></div>
+    <div class="stat-item"><div class="stat-num">87%</div><div class="stat-label">Habit Success Rate</div></div>
+    <div class="stat-item"><div class="stat-num">150+</div><div class="stat-label">Eco Tips</div></div>
+  </div>
+
+  <!-- Feature Cards -->
+  <div class="container section">
+    <div class="section-title">
+      <h2>Everything you need to go green</h2>
+      <p>Tools and knowledge to build lasting sustainable habits</p>
+    </div>
+    <div class="cards-grid">
+      <div class="card" tabindex="0" onclick="showPage('dashboard')" onkeypress="if(event.key==='Enter')showPage('dashboard')" role="button" aria-label="Carbon Tracker - go to dashboard">
+        <div class="card-icon" aria-hidden="true">📊</div>
+        <h3>Carbon Tracker</h3>
+        <p>Log your daily activities and see your real-time carbon footprint across transport, food, and energy.</p>
+        <span class="card-tag">Dashboard</span>
+      </div>
+      <div class="card" tabindex="0" onclick="showPage('learn'); showTab('quiz')" onkeypress="if(event.key==='Enter')showPage('learn')" role="button" aria-label="Eco Quiz - test your knowledge">
+        <div class="card-icon" aria-hidden="true">🧠</div>
+        <h3>Eco Quiz</h3>
+        <p>Test your sustainability knowledge with our interactive quiz and get personalised learning paths.</p>
+        <span class="card-tag">Learn</span>
+      </div>
+      <div class="card" tabindex="0" onclick="showPage('learn'); showTab('tips')" onkeypress="if(event.key==='Enter')showPage('learn')" role="button" aria-label="Daily Tips">
+        <div class="card-icon" aria-hidden="true">💡</div>
+        <h3>Daily Tips</h3>
+        <p>Receive personalised eco tips every day tailored to your lifestyle and tracked behaviors.</p>
+        <span class="card-tag">Learn</span>
+      </div>
+      <div class="card" tabindex="0" onclick="showPage('about')" onkeypress="if(event.key==='Enter')showPage('about')" role="button" aria-label="Community">
+        <div class="card-icon" aria-hidden="true">🤝</div>
+        <h3>Community</h3>
+        <p>Join thousands of eco-conscious users, share progress, and participate in group challenges.</p>
+        <span class="card-tag">Community</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE: DASHBOARD (Level 2 depth)
+══════════════════════════════════ -->
+<div id="page-dashboard" class="page">
+  <div class="breadcrumb" aria-label="Breadcrumb navigation">
+    <a href="#" onclick="showPage('home')">Home</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <span aria-current="page">Dashboard</span>
+  </div>
+  <div class="container section">
+    <div style="margin-bottom: 1.5rem;">
+      <h1 style="font-family:'DM Serif Display',Georgia,'Times New Roman',serif; font-size: 1.8rem;">My Dashboard</h1>
+      <p style="color: var(--text3); font-size: 14px;">Track your sustainability metrics</p>
+    </div>
+
+    <!-- Tabs: Level 2 navigation depth -->
+    <div class="tabs" role="tablist" aria-label="Dashboard sections">
+      <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="tab-overview" id="tab-btn-overview" onclick="showTab('overview')">📊 Overview</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-tracker" id="tab-btn-tracker" onclick="showTab('tracker')">📈 My Tracker</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-goals" id="tab-btn-goals" onclick="showTab('goals')">🎯 Goals</button>
+    </div>
+
+    <!-- Overview Tab -->
+    <div id="tab-overview" class="tab-panel active" role="tabpanel" aria-labelledby="tab-btn-overview">
+      <div class="tracker-grid">
+        <div class="tracker-card">
+          <h3>🌍 Carbon Footprint This Month</h3>
+          <div class="progress-row">
+            <div class="progress-label"><span>Transport</span><span>4.2 kg CO₂</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:70%" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" aria-label="Transport carbon: 70%"></div></div>
+          </div>
+          <div class="progress-row">
+            <div class="progress-label"><span>Food</span><span>2.8 kg CO₂</span></div>
+            <div class="progress-bar"><div class="progress-fill warn" style="width:45%" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" aria-label="Food carbon: 45%"></div></div>
+          </div>
+          <div class="progress-row">
+            <div class="progress-label"><span>Energy</span><span>6.1 kg CO₂</span></div>
+            <div class="progress-bar"><div class="progress-fill danger" style="width:85%" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" aria-label="Energy carbon: 85%"></div></div>
+          </div>
+          <p style="font-size:13px;color:var(--text3);margin-top:12px;">⚠️ Energy usage is above your monthly target. Consider switching to LED lighting.</p>
+        </div>
+        <div class="tracker-card">
+          <h3>🏆 Weekly Achievements</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--accent-light);border-radius:var(--radius-sm);">
+              <span style="font-size:1.5rem" aria-hidden="true">🚲</span>
+              <div><p style="font-size:14px;font-weight:500;">Cycled to work 3 days</p><p style="font-size:12px;color:var(--text3);">Saved 1.5 kg CO₂</p></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--accent-light);border-radius:var(--radius-sm);">
+              <span style="font-size:1.5rem" aria-hidden="true">🥗</span>
+              <div><p style="font-size:14px;font-weight:500;">Plant-based meals ×5</p><p style="font-size:12px;color:var(--text3);">Saved 3.2 kg CO₂</p></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--surface2);border-radius:var(--radius-sm);opacity:0.6;">
+              <span style="font-size:1.5rem" aria-hidden="true">💡</span>
+              <div><p style="font-size:14px;font-weight:500;">Reduced energy usage</p><p style="font-size:12px;color:var(--text3);">Not achieved this week</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inline Log Activity Form -->
+      <div class="tracker-card" style="margin-top:1.5rem;">
+        <h3>➕ Log an Activity</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;flex-wrap:wrap;" id="log-form">
+          <div class="form-group" style="margin:0">
+            <label for="activity-type">Activity type</label>
+            <select id="activity-type" aria-required="true">
+              <option value="">Select activity…</option>
+              <option value="transport">🚗 Car journey</option>
+              <option value="cycling">🚲 Cycling</option>
+              <option value="vegetarian">🥗 Vegetarian meal</option>
+              <option value="flight">✈️ Flight</option>
+              <option value="energy">💡 Reduced energy</option>
+            </select>
+            <span class="error-msg" id="activity-err">Please select an activity</span>
+          </div>
+          <div class="form-group" style="margin:0">
+            <label for="activity-val">Amount / km</label>
+            <input type="number" id="activity-val" placeholder="e.g. 10" min="0" aria-required="true">
+            <span class="error-msg" id="val-err">Please enter a valid amount</span>
+          </div>
+          <button class="btn btn-green" onclick="logActivity()" aria-label="Log this activity">
+            <span id="log-btn-text">Log</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tracker Tab -->
+    <div id="tab-tracker" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-tracker">
+      <div class="tracker-card">
+        <h3>📅 Recent Logs</h3>
+        <div id="log-list" style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:14px;">
+            <span>🚲 Cycled 8 km to work</span><span style="color:var(--success);">−0.4 kg CO₂</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:14px;">
+            <span>🥗 Vegetarian meal</span><span style="color:var(--success);">−0.8 kg CO₂</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:14px;">
+            <span>🚗 Car 30 km</span><span style="color:var(--danger);">+4.2 kg CO₂</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Goals Tab -->
+    <div id="tab-goals" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-goals">
+      <div class="tracker-card">
+        <h3>🎯 Monthly Goals</h3>
+        <div id="goals-list" style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;align-items:center;gap:12px;padding:12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);">
+            <input type="checkbox" id="goal1" style="width:18px;height:18px;cursor:pointer;" aria-label="Goal: Cycle to work 10 times">
+            <label for="goal1" style="cursor:pointer;font-size:14px;">Cycle to work 10 times this month <span style="color:var(--text3);">(3/10)</span></label>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);">
+            <input type="checkbox" id="goal2" style="width:18px;height:18px;cursor:pointer;" aria-label="Goal: 15 vegetarian meals">
+            <label for="goal2" style="cursor:pointer;font-size:14px;">Eat 15 plant-based meals <span style="color:var(--text3);">(5/15)</span></label>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px;border:1.5px solid var(--success);border-radius:var(--radius-sm);background:#e8f5e9;">
+            <input type="checkbox" id="goal3" checked style="width:18px;height:18px;cursor:pointer;" aria-label="Goal completed: Reduce heating by 2°C">
+            <label for="goal3" style="cursor:pointer;font-size:14px;text-decoration:line-through;color:var(--text3);">Reduce heating by 2°C ✅</label>
+          </div>
+        </div>
+        <button class="btn btn-green btn-sm" style="margin-top:1rem;" onclick="showModal('goal-modal')">+ Add Goal</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE: LEARN (Level 2 depth)
+══════════════════════════════════ -->
+<div id="page-learn" class="page">
+  <div class="breadcrumb" aria-label="Breadcrumb navigation">
+    <a href="#" onclick="showPage('home')">Home</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <span aria-current="page">Learn</span>
+  </div>
+  <div class="container section">
+    <div style="margin-bottom:1.5rem;">
+      <h1 style="font-family:'DM Serif Display',Georgia,'Times New Roman',serif; font-size:1.8rem;">Learn & Discover</h1>
+      <p style="color:var(--text3);font-size:14px;">Articles, quizzes, and daily tips</p>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Learn sections">
+      <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="tab-articles" id="tab-btn-articles" onclick="showTab('articles')">📚 Articles</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-quiz" id="tab-btn-quiz" onclick="showTab('quiz')">🧠 Eco Quiz</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-tips" id="tab-btn-tips" onclick="showTab('tips')">💡 Daily Tips</button>
+    </div>
+
+    <!-- Articles Tab -->
+    <div id="tab-articles" class="tab-panel active" role="tabpanel" aria-labelledby="tab-btn-articles">
+      <div class="cards-grid">
+        <div class="card" tabindex="0" onclick="showSubpage('article-1')" onkeypress="if(event.key==='Enter')showSubpage('article-1')" role="button">
+          <div class="card-icon" aria-hidden="true">🌡️</div>
+          <h3>Understanding Your Carbon Footprint</h3>
+          <p>Learn what makes up your personal CO₂ emissions and where the biggest opportunities lie.</p>
+          <span class="card-tag">5 min read</span>
+        </div>
+        <div class="card" tabindex="0" onclick="showSubpage('article-2')" onkeypress="if(event.key==='Enter')showSubpage('article-2')" role="button">
+          <div class="card-icon" aria-hidden="true">🚌</div>
+          <h3>Green Transport Options</h3>
+          <p>Comparing the environmental impact of cars, trains, buses, cycling, and e-scooters.</p>
+          <span class="card-tag">7 min read</span>
+        </div>
+        <div class="card" tabindex="0" role="button" tabindex="0">
+          <div class="card-icon" aria-hidden="true">🥦</div>
+          <h3>The Plant-Based Diet Impact</h3>
+          <p>How shifting your food choices can cut your carbon footprint by up to 73%.</p>
+          <span class="card-tag">4 min read</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz Tab (Level 2 sub-feature) -->
+    <div id="tab-quiz" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-quiz">
+      <div class="tracker-card" style="max-width:620px;">
+        <h3>🧠 Eco Knowledge Check</h3>
+        <p style="font-size:14px;color:var(--text2);margin:8px 0 1.2rem;">Question <span id="q-num">1</span> of 3</p>
+
+        <div id="quiz-container">
+          <!-- Q1 -->
+          <div id="q1" class="quiz-question">
+            <p style="font-weight:500;margin-bottom:12px;">What percentage of global greenhouse gas emissions comes from food production?</p>
+            <div class="quiz-option" tabindex="0" onclick="answerQuiz(this,'wrong')" onkeypress="if(event.key==='Enter')answerQuiz(this,'wrong')" role="button" aria-label="Option A: 10%">
+              <div class="quiz-dot" aria-hidden="true"></div><span>Around 10%</span>
+            </div>
+            <div class="quiz-option" tabindex="0" onclick="answerQuiz(this,'correct')" onkeypress="if(event.key==='Enter')answerQuiz(this,'correct')" role="button" aria-label="Option B: 26% - correct answer">
+              <div class="quiz-dot" aria-hidden="true"></div><span>Around 26%</span>
+            </div>
+            <div class="quiz-option" tabindex="0" onclick="answerQuiz(this,'wrong')" onkeypress="if(event.key==='Enter')answerQuiz(this,'wrong')" role="button" aria-label="Option C: 50%">
+              <div class="quiz-dot" aria-hidden="true"></div><span>Around 50%</span>
+            </div>
+            <div class="quiz-feedback" id="q1-feedback"></div>
+          </div>
+        </div>
+
+        <div id="quiz-score" style="display:none;padding:1.2rem;background:var(--accent-light);border-radius:var(--radius-sm);text-align:center;">
+          <p style="font-size:1.2rem;font-weight:600;color:var(--accent);">Quiz Complete! 🎉</p>
+          <p style="color:var(--text2);font-size:14px;margin-top:4px;">You scored <span id="score-val">0</span>/3</p>
+          <button class="btn btn-green btn-sm" onclick="resetQuiz()" style="margin-top:12px;">Try Again</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tips Tab -->
+    <div id="tab-tips" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-tips">
+      <div id="tips-container" style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="hci-card">
+          <h4>💡 Tip of the Day</h4>
+          <p>Switch your boiler temperature down by 1°C — you won't notice the difference, but it saves ~3% on your heating bill and reduces CO₂.</p>
+        </div>
+        <div class="hci-card" style="border-color: var(--warn);">
+          <h4>🚿 Water Saving</h4>
+          <p>Cutting your shower by 2 minutes saves approximately 20 litres of water per wash — and the energy to heat it.</p>
+        </div>
+        <div class="hci-card" style="border-color: var(--accent);">
+          <h4>🛍️ Shopping Smarter</h4>
+          <p>Buying one fewer new item of clothing per month reduces your wardrobe's carbon footprint by up to 24% annually.</p>
+        </div>
+        <button class="btn btn-green btn-sm" onclick="loadMoreTips()" id="tips-load-btn" aria-label="Load more tips">
+          <span id="tips-btn-text">Load more tips</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE: ARTICLE SUBPAGE (Level 3 depth)
+══════════════════════════════════ -->
+<div id="page-article-1" class="page">
+  <div class="breadcrumb" aria-label="Breadcrumb navigation">
+    <a href="#" onclick="showPage('home')">Home</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <a href="#" onclick="showPage('learn')">Learn</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <span aria-current="page">Understanding Your Carbon Footprint</span>
+  </div>
+  <div class="container section" style="max-width:740px;">
+    <h1 style="font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:2rem;margin-bottom:0.5rem;">Understanding Your Carbon Footprint</h1>
+    <p style="color:var(--text3);font-size:14px;margin-bottom:2rem;">5 min read · Transport, Food, Energy</p>
+
+    <div style="background:var(--accent-light);border-radius:var(--radius);padding:1.2rem 1.5rem;margin-bottom:2rem;border-left:4px solid var(--accent);">
+      <p style="font-size:14px;color:var(--accent);">💡 <strong>Key takeaway:</strong> The average person in the EU produces 8.4 tonnes of CO₂ equivalent per year. Three areas — transport, food, and home energy — account for over 70% of that.</p>
+    </div>
+
+    <h2 style="font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:1.3rem;margin-bottom:0.75rem;">What is a carbon footprint?</h2>
+    <p style="color:var(--text2);margin-bottom:1.2rem;line-height:1.8;">A carbon footprint is the total greenhouse gas emissions caused directly and indirectly by an individual, organisation, event or product. It is expressed in tonnes of carbon dioxide equivalent (CO₂e), which accounts for all gases — methane, nitrous oxide, and others — scaled to their warming potential.</p>
+
+    <h2 style="font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:1.3rem;margin-bottom:0.75rem;">The three biggest sources</h2>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem;">
+      <div style="padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);">
+        <strong>🚗 Transport (29%)</strong> — Cars are the biggest single contributor. A petrol car emits ~171g CO₂ per km. Switching to public transport or cycling cuts this dramatically.
+      </div>
+      <div style="padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);">
+        <strong>🍔 Food (26%)</strong> — Beef is the most carbon-intensive food. Replacing one beef meal per week with plant-based food saves ~340 kg CO₂ annually.
+      </div>
+      <div style="padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);">
+        <strong>🏠 Home Energy (21%)</strong> — Heating and cooling dominate. Lowering your thermostat by 1°C saves around 8% of heating energy.
+      </div>
+    </div>
+
+    <button class="btn btn-green" onclick="showPage('dashboard');showTab('tracker')">Start Tracking Yours →</button>
+  </div>
+</div>
+
+<div id="page-article-2" class="page">
+  <div class="breadcrumb" aria-label="Breadcrumb navigation">
+    <a href="#" onclick="showPage('home')">Home</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <a href="#" onclick="showPage('learn')">Learn</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <span aria-current="page">Green Transport Options</span>
+  </div>
+  <div class="container section" style="max-width:740px;">
+    <h1 style="font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:2rem;margin-bottom:2rem;">Green Transport Options</h1>
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+      <thead>
+        <tr style="background:var(--accent);color:#fff;">
+          <th style="padding:12px;text-align:left;border-radius:var(--radius-sm) 0 0 0;">Mode</th>
+          <th style="padding:12px;text-align:right;">g CO₂ / km</th>
+          <th style="padding:12px;text-align:right;">Relative impact</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:var(--surface);border-bottom:1px solid var(--border);">
+          <td style="padding:12px;">🚲 Cycling</td><td style="padding:12px;text-align:right;">0</td>
+          <td style="padding:12px;text-align:right;color:var(--success);">None</td>
+        </tr>
+        <tr style="background:var(--surface2);border-bottom:1px solid var(--border);">
+          <td style="padding:12px;">🚌 Bus</td><td style="padding:12px;text-align:right;">89</td>
+          <td style="padding:12px;text-align:right;color:var(--success);">Low</td>
+        </tr>
+        <tr style="background:var(--surface);border-bottom:1px solid var(--border);">
+          <td style="padding:12px;">🚆 Train</td><td style="padding:12px;text-align:right;">41</td>
+          <td style="padding:12px;text-align:right;color:var(--success);">Very low</td>
+        </tr>
+        <tr style="background:var(--surface2);border-bottom:1px solid var(--border);">
+          <td style="padding:12px;">🚗 Petrol car</td><td style="padding:12px;text-align:right;">171</td>
+          <td style="padding:12px;text-align:right;color:var(--danger);">High</td>
+        </tr>
+        <tr style="background:var(--surface);">
+          <td style="padding:12px;">✈️ Short-haul flight</td><td style="padding:12px;text-align:right;">255</td>
+          <td style="padding:12px;text-align:right;color:var(--danger);">Very high</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:1.5rem;">
+      <button class="btn btn-green" onclick="showPage('dashboard')">Track my transport →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE: ABOUT (real about page)
+══════════════════════════════════ -->
+<div id="page-about" class="page">
+  <div class="breadcrumb" aria-label="Breadcrumb navigation">
+    <a href="#" onclick="showPage('home')">Home</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <span aria-current="page">About</span>
+  </div>
+
+  <!-- About Hero Banner -->
+  <div style="background:linear-gradient(135deg,#1a3a16 0%,#2D5A27 50%,#4a8a3a 100%);color:#fff;padding:4rem 2rem;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;opacity:0.07;background:repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 0,transparent 50%);background-size:20px 20px;"></div>
+    <div style="position:relative;">
+      <div style="font-size:3.5rem;margin-bottom:1rem;">🌿</div>
+      <h1 style="font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:1rem;line-height:1.2;">About EcoTrack</h1>
+      <p style="font-size:1.05rem;opacity:0.9;max-width:580px;margin:0 auto;">We believe small everyday choices add up to massive global change. EcoTrack makes sustainable living easy, measurable, and rewarding for everyone.</p>
+    </div>
+  </div>
+
+  <!-- HCI Callout (moved from Home page) -->
+  <div style="background: var(--accent-light); border-bottom: 1px solid var(--border); padding: 1.5rem 2rem;">
+    <div class="container">
+      <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+        <span style="font-size: 2rem" aria-hidden="true">♿</span>
+        <div>
+          <h3 style="font-size: 1rem; color: var(--accent); margin-bottom: 4px;">Designed for Everyone</h3>
+          <p style="font-size: 14px; color: var(--text2);">EcoTrack meets WCAG 2.1 AA standards — keyboard navigable, screen-reader friendly, and high-contrast accessible.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Our Story -->
+  <div style="background:var(--surface);border-bottom:1px solid var(--border);">
+    <div class="container" style="padding-top:3rem;padding-bottom:3rem;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;">
+        <div>
+          <p style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent2);margin-bottom:0.5rem;">Our Story</p>
+          <h2 style="font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:1.9rem;margin-bottom:1rem;line-height:1.3;">Born from a passion for the planet</h2>
+          <p style="color:var(--text2);line-height:1.9;margin-bottom:1rem;">EcoTrack started as a university project at Vilnius University Šiauliai Academy, created as part of a Human-Computer Interaction assignment. The challenge was to build something real — a tool that actually helps people live more sustainably, not just looks good on paper.</p>
+          <p style="color:var(--text2);line-height:1.9;">What began as an academic exercise became a genuine passion project. Every screen, every button, every piece of feedback in this app was designed with one question in mind: <em>"Does this make it easier for a real person to make a greener choice today?"</em></p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div style="background:var(--accent-light);border-radius:var(--radius);padding:1.5rem;text-align:center;">
+            <div style="font-size:2rem;margin-bottom:0.5rem;">🌍</div>
+            <div style="font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:2rem;color:var(--accent);">42k</div>
+            <div style="font-size:13px;color:var(--text3);margin-top:4px;">Active Users</div>
+          </div>
+          <div style="background:var(--accent-light);border-radius:var(--radius);padding:1.5rem;text-align:center;">
+            <div style="font-size:2rem;margin-bottom:0.5rem;">♻️</div>
+            <div style="font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:2rem;color:var(--accent);">1.2M</div>
+            <div style="font-size:13px;color:var(--text3);margin-top:4px;">kg CO₂ Saved</div>
+          </div>
+          <div style="background:var(--accent-light);border-radius:var(--radius);padding:1.5rem;text-align:center;">
+            <div style="font-size:2rem;margin-bottom:0.5rem;">🎯</div>
+            <div style="font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:2rem;color:var(--accent);">87%</div>
+            <div style="font-size:13px;color:var(--text3);margin-top:4px;">Goal Success Rate</div>
+          </div>
+          <div style="background:var(--accent-light);border-radius:var(--radius);padding:1.5rem;text-align:center;">
+            <div style="font-size:2rem;margin-bottom:0.5rem;">💡</div>
+            <div style="font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:2rem;color:var(--accent);">150+</div>
+            <div style="font-size:13px;color:var(--text3);margin-top:4px;">Eco Tips</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Our Values -->
+  <div class="container" style="padding-top:3rem;padding-bottom:3rem;">
+    <div style="text-align:center;margin-bottom:2.5rem;">
+      <p style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent2);margin-bottom:0.5rem;">What We Stand For</p>
+      <h2 style="font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:1.9rem;">Our Core Values</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.5rem;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;text-align:center;">
+        <div style="width:56px;height:56px;background:var(--accent-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;">🌱</div>
+        <h3 style="font-size:1rem;margin-bottom:0.5rem;">Sustainability First</h3>
+        <p style="font-size:14px;color:var(--text2);line-height:1.6;">Every feature we build must genuinely help users reduce their environmental impact — not just feel like they are.</p>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;text-align:center;">
+        <div style="width:56px;height:56px;background:var(--accent-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;">♿</div>
+        <h3 style="font-size:1rem;margin-bottom:0.5rem;">Accessible to All</h3>
+        <p style="font-size:14px;color:var(--text2);line-height:1.6;">Green living should not be exclusive. We design for everyone — across all abilities, devices, and backgrounds.</p>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;text-align:center;">
+        <div style="width:56px;height:56px;background:var(--accent-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;">🔒</div>
+        <h3 style="font-size:1rem;margin-bottom:0.5rem;">Privacy Respected</h3>
+        <p style="font-size:14px;color:var(--text2);line-height:1.6;">Your data belongs to you. We never sell personal information, and you can delete your account at any moment.</p>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;text-align:center;">
+        <div style="width:56px;height:56px;background:var(--accent-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;">📊</div>
+        <h3 style="font-size:1rem;margin-bottom:0.5rem;">Science-Based</h3>
+        <p style="font-size:14px;color:var(--text2);line-height:1.6;">All CO₂ calculations are based on peer-reviewed research and official emissions data — no greenwashing, ever.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Meet the Creator -->
+  <div style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+    <div class="container" style="padding-top:3rem;padding-bottom:3rem;">
+      <div style="text-align:center;margin-bottom:2.5rem;">
+        <p style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent2);margin-bottom:0.5rem;">The Team</p>
+        <h2 style="font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:1.9rem;">Meet the Creator</h2>
+      </div>
+      <div style="max-width:380px;margin:0 auto;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;text-align:center;">
+        <div style="width:80px;height:80px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;font-size:2rem;color:#fff;">MH</div>
+        <h3 style="font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:1.3rem;margin-bottom:4px;">Mehedi Hasan</h3>
+        <p style="font-size:13px;color:var(--accent2);font-weight:600;margin-bottom:0.75rem;">Developer & Designer</p>
+        <p style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:1.2rem;">Student at Vilnius University Šiauliai Academy, Institute of Regional Development. Passionate about combining good design with technology that makes a real difference.</p>
+        <div style="display:flex;flex-direction:column;gap:8px;align-items:center;">
+          <a href="mailto:mehedihasan@gmail.com" style="display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--accent);text-decoration:none;padding:8px 16px;border:1.5px solid var(--accent);border-radius:var(--radius-sm);transition:all 0.15s;" onmouseover="this.style.background='var(--accent-light)'" onmouseout="this.style.background='transparent'">
+            ✉️ mehedihasan@gmail.com
+          </a>
+          <span style="font-size:13px;color:var(--text3);">HCI Practical Work No. 2 · 2025</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tech Stack -->
+  <div class="container" style="padding-top:3rem;padding-bottom:3rem;">
+    <div style="text-align:center;margin-bottom:2rem;">
+      <p style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent2);margin-bottom:0.5rem;">Under The Hood</p>
+      <h2 style="font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:1.9rem;">Technology Stack</h2>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:2.5rem;">
+      <span style="background:var(--accent-light);color:var(--accent);padding:8px 18px;border-radius:99px;font-size:14px;font-weight:600;">HTML5</span>
+      <span style="background:var(--accent-light);color:var(--accent);padding:8px 18px;border-radius:99px;font-size:14px;font-weight:600;">CSS3</span>
+      <span style="background:var(--accent-light);color:var(--accent);padding:8px 18px;border-radius:99px;font-size:14px;font-weight:600;">Vanilla JavaScript</span>
+      <span style="background:var(--accent-light);color:var(--accent);padding:8px 18px;border-radius:99px;font-size:14px;font-weight:600;">GitHub Pages</span>
+      <span style="background:var(--accent-light);color:var(--accent);padding:8px 18px;border-radius:99px;font-size:14px;font-weight:600;">WCAG 2.1 AA</span>
+      <span style="background:var(--accent-light);color:var(--accent);padding:8px 18px;border-radius:99px;font-size:14px;font-weight:600;">Nielsen's Heuristics</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE: JOIN FREE (full form)
+══════════════════════════════════ -->
+<div id="page-contact" class="page">
+  <div class="breadcrumb" aria-label="Breadcrumb navigation">
+    <a href="#" onclick="showPage('home')">Home</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <span aria-current="page">Join Free</span>
+  </div>
+
+  <!-- Join Hero -->
+  <div style="background:linear-gradient(135deg,var(--accent) 0%,#4a8a3a 100%);color:#fff;padding:3.5rem 2rem;text-align:center;">
+    <div style="font-size:2.5rem;margin-bottom:0.75rem;">🌱</div>
+    <h1 style="font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:clamp(1.8rem,4vw,2.2rem);margin-bottom:0.75rem;">Ready to start your green journey?</h1>
+    <p style="opacity:0.9;max-width:520px;margin:0 auto 0.5rem;">Join thousands of users already making a difference — it's completely free.</p>
+    <p style="opacity:0.75;max-width:480px;margin:0 auto;font-size:14px;">No credit card. No spam. Cancel any time.</p>
+  </div>
+
+  <div class="container section" style="max-width:640px;">
+
+    <!-- Form card -->
+    <div id="join-form-wrap" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;">
+
+      <p style="font-size:13px;color:var(--text3);margin-bottom:1.5rem;">Fields marked <span style="color:var(--danger);">*</span> are required</p>
+
+      <!-- Row 1: Full name -->
+      <div class="form-group">
+        <label for="reg-name">Full name <span style="color:var(--danger);">*</span></label>
+        <input type="text" id="reg-name" placeholder="e.g. Mehedi Hasan" autocomplete="name" aria-required="true">
+        <span class="error-msg" id="name-err">Please enter your full name</span>
+      </div>
+
+      <!-- Row 2: Email -->
+      <div class="form-group">
+        <label for="reg-email">Email address <span style="color:var(--danger);">*</span></label>
+        <input type="email" id="reg-email" placeholder="you@example.com" autocomplete="email" aria-required="true">
+        <span class="error-msg" id="email-err">Please enter a valid email address</span>
+      </div>
+
+      <!-- Row 3: Age + Gender side by side -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group">
+          <label for="reg-age">Age <span style="color:var(--danger);">*</span></label>
+          <input type="number" id="reg-age" placeholder="e.g. 22" min="10" max="100" aria-required="true">
+          <span class="error-msg" id="age-err">Please enter a valid age</span>
+        </div>
+        <div class="form-group">
+          <label for="reg-gender">Gender</label>
+          <select id="reg-gender">
+            <option value="">Prefer not to say</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="nonbinary">Non-binary</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Row 4: Country -->
+      <div class="form-group">
+        <label for="reg-country">Country <span style="color:var(--danger);">*</span></label>
+        <select id="reg-country" aria-required="true">
+          <option value="">Select your country…</option>
+          <option value="lt">🇱🇹 Lithuania</option>
+          <option value="lv">🇱🇻 Latvia</option>
+          <option value="ee">🇪🇪 Estonia</option>
+          <option value="pl">🇵🇱 Poland</option>
+          <option value="de">🇩🇪 Germany</option>
+          <option value="uk">🇬🇧 United Kingdom</option>
+          <option value="fr">🇫🇷 France</option>
+          <option value="bd">🇧🇩 Bangladesh</option>
+          <option value="in">🇮🇳 India</option>
+          <option value="us">🇺🇸 United States</option>
+          <option value="other">🌍 Other</option>
+        </select>
+        <span class="error-msg" id="country-err">Please select your country</span>
+      </div>
+
+      <!-- Row 5: Phone (optional) -->
+      <div class="form-group">
+        <label for="reg-phone">Phone number <span style="font-size:12px;color:var(--text3);font-weight:400;">(optional)</span></label>
+        <input type="tel" id="reg-phone" placeholder="e.g. +370 600 12345" autocomplete="tel">
+        <p class="form-hint">We will only use this for account recovery</p>
+      </div>
+
+      <!-- Row 6: Lifestyle -->
+      <div class="form-group">
+        <label for="reg-lifestyle">Lifestyle type <span style="color:var(--danger);">*</span></label>
+        <select id="reg-lifestyle" aria-required="true" aria-describedby="lifestyle-hint">
+          <option value="">Select your lifestyle…</option>
+          <option value="urban">🏙️ Urban commuter</option>
+          <option value="suburban">🏡 Suburban / town</option>
+          <option value="rural">🌾 Rural / countryside</option>
+          <option value="student">🎓 Student</option>
+          <option value="remote">💻 Remote worker</option>
+        </select>
+        <p class="form-hint" id="lifestyle-hint">Helps us personalise your daily eco tips</p>
+        <span class="error-msg" id="lifestyle-err">Please select your lifestyle type</span>
+      </div>
+
+      <!-- Row 7: Main goal -->
+      <div class="form-group">
+        <label for="reg-goal">My main sustainability goal <span style="color:var(--danger);">*</span></label>
+        <select id="reg-goal" aria-required="true">
+          <option value="">Select your goal…</option>
+          <option value="footprint">🌍 Reduce my overall carbon footprint</option>
+          <option value="food">🥗 Eat more sustainably</option>
+          <option value="transport">🚲 Use greener transport</option>
+          <option value="energy">💡 Save home energy</option>
+          <option value="waste">♻️ Reduce waste and plastic use</option>
+          <option value="all">✅ All of the above!</option>
+        </select>
+        <span class="error-msg" id="goal-err">Please select your main goal</span>
+      </div>
+
+      <!-- Row 8: How did you hear -->
+      <div class="form-group">
+        <label for="reg-source">How did you hear about EcoTrack? <span style="font-size:12px;color:var(--text3);font-weight:400;">(optional)</span></label>
+        <select id="reg-source">
+          <option value="">Select…</option>
+          <option value="university">🎓 University / college</option>
+          <option value="friend">👥 Friend or family</option>
+          <option value="social">📱 Social media</option>
+          <option value="search">🔍 Search engine</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <!-- Terms checkbox -->
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:1.5rem;padding:12px;background:var(--surface2);border-radius:var(--radius-sm);">
+        <input type="checkbox" id="reg-terms" style="width:18px;height:18px;margin-top:2px;cursor:pointer;flex-shrink:0;" aria-required="true">
+        <label for="reg-terms" style="font-size:13px;color:var(--text2);cursor:pointer;line-height:1.5;">
+          I agree to EcoTrack's <span style="color:var(--accent);text-decoration:underline;cursor:pointer;">Terms of Service</span> and <span style="color:var(--accent);text-decoration:underline;cursor:pointer;">Privacy Policy</span>. I understand my data will never be sold. <span style="color:var(--danger);">*</span>
+        </label>
+      </div>
+      <span class="error-msg" id="terms-err" style="margin-top:-1rem;margin-bottom:1rem;display:none;">You must agree to the terms to continue</span>
+
+      <!-- Submit button -->
+      <button class="btn btn-green" style="width:100%;justify-content:center;padding:14px;" onclick="submitRegistration()" id="reg-btn" aria-live="polite">
+        <span id="reg-btn-text">🌱 Create my free account</span>
+      </button>
+      <p style="font-size:12px;color:var(--text3);margin-top:12px;text-align:center;">No spam, ever. You can delete your account at any time.</p>
+    </div>
+
+    <!-- Success state -->
+    <div id="join-success" style="display:none;text-align:center;padding:3rem 2rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);">
+      <div style="font-size:4rem;margin-bottom:1rem;">🎉</div>
+      <h2 style="font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:1.8rem;margin-bottom:0.5rem;">Welcome to EcoTrack!</h2>
+      <p style="color:var(--text2);margin-bottom:2rem;font-size:15px;">Your account has been created successfully.<br>Let's start your green journey.</p>
+      <button class="btn btn-green" onclick="showPage('dashboard')" style="font-size:15px;">Go to My Dashboard →</button>
+    </div>
+
+  </div>
+</div>
+
+</main>
+
+<!-- ── MODAL: Add Goal ── -->
+<div class="modal-overlay" id="goal-modal" role="dialog" aria-modal="true" aria-labelledby="goal-modal-title" onclick="if(event.target===this)closeModal('goal-modal')">
+  <div class="modal">
+    <h3 id="goal-modal-title">Add a new goal</h3>
+    <p>Set a concrete target to help build your eco habit.</p>
+    <div class="form-group">
+      <label for="goal-input">Goal description</label>
+      <input type="text" id="goal-input" placeholder="e.g. Walk to work 5 days" aria-required="true">
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('goal-modal')" style="border-color:var(--border);">Cancel</button>
+      <button class="btn btn-green" onclick="addGoal()">Add Goal</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer role="contentinfo">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h4>🌿 EcoTrack</h4>
+      <p style="font-size:13px;margin-bottom:8px;">Your companion for a more sustainable lifestyle.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <a href="#" onclick="showPage('home')">Home</a>
+      <a href="#" onclick="showPage('dashboard')">Dashboard</a>
+      <a href="#" onclick="showPage('learn')">Learn</a>
+      <a href="#" onclick="showPage('about')">About</a>
+    </div>
+    <div class="footer-col">
+      <h4>Learn</h4>
+      <a href="#" onclick="showPage('learn');showTab('articles')">Articles</a>
+      <a href="#" onclick="showPage('learn');showTab('quiz')">Eco Quiz</a>
+      <a href="#" onclick="showPage('learn');showTab('tips')">Daily Tips</a>
+    </div>
+    <div class="footer-col">
+      <h4>Account</h4>
+      <a href="#" onclick="showPage('contact')">Create Account</a>
+      <a href="#" onclick="showPage('about')">HCI Design Notes</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 EcoTrack — HCI Assignment Project</span>
+    <span>Built with Python (Flask) + Vanilla JS · WCAG 2.1 AA</span>
+  </div>
+</footer>
+
+<script>
+  // Detect file:// protocol (local open in Chrome) — history API is blocked there
+  var isLocal = (window.location.protocol === 'file:');
+
+  // ── PAGE ROUTING ──
+  function showPage(pageId, skipHistory) {
+    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+    var target = document.getElementById('page-' + pageId);
+    if (target) { target.classList.add('active'); window.scrollTo(0, 0); }
+
+    // Only use history API when running on a real server (not file://)
+    if (!isLocal && !skipHistory) {
+      try { history.pushState({ page: pageId }, '', '#' + pageId); } catch(e) {}
+    }
+
+    document.querySelectorAll('.nav-links a').forEach(function(a) { a.classList.remove('active'); });
+    var map = { home: 'nav-home' };
+    if (map[pageId]) document.getElementById(map[pageId]).classList.add('active');
+
+    // Update aria-current
+    document.querySelectorAll('[aria-current=page]').forEach(function(el) { el.removeAttribute('aria-current'); });
+    var navEl = document.getElementById('nav-' + pageId);
+    if (navEl) { navEl.setAttribute('aria-current', 'page'); navEl.classList.add('active'); }
+  }
+
+  // ── BROWSER BACK / FORWARD BUTTON (server only) ──
+  if (!isLocal) {
+    window.addEventListener('popstate', function(e) {
+      var pageId = (e.state && e.state.page) ? e.state.page : 'home';
+      showPage(pageId, true);
+    });
+  }
+
+  // ── LOAD CORRECT PAGE FROM URL HASH ON FIRST VISIT ──
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash.replace('#', '');
+    var validPages = ['home','dashboard','learn','about','contact','article-1','article-2'];
+    if (hash && validPages.includes(hash)) {
+      showPage(hash, true);
+    }
+    // Skip replaceState — causes SecurityError on file://
+  });
+
+  // ── TABS ──
+  function showTab(tabId) {
+    const btn = document.getElementById('tab-btn-' + tabId);
+    const panel = document.getElementById('tab-' + tabId);
+    if (!btn || !panel) return;
+    const parentPage = btn.closest('.page');
+    if (parentPage) {
+      parentPage.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      parentPage.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    }
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+    panel.classList.add('active');
+  }
+
+  // ── SUBPAGES ──
+  function showSubpage(id) { showPage(id); }
+
+  // ── TOAST ──
+  function showToast(msg, type='') {
+    const container = document.getElementById('toast-container');
+    const t = document.createElement('div');
+    t.className = 'toast ' + type;
+    const icons = { success:'✅ ', 'error-t':'❌ ', warn:'⚠️ ', '':'ℹ️ ' };
+    t.textContent = (icons[type]||'') + msg;
+    container.appendChild(t);
+    setTimeout(() => t.remove(), 3200);
+  }
+
+  // ── ACTIVITY LOGGER ──
+  function logActivity() {
+    const type = document.getElementById('activity-type').value;
+    const val = document.getElementById('activity-val').value;
+    let valid = true;
+
+    document.getElementById('activity-err').classList.remove('visible');
+    document.getElementById('val-err').classList.remove('visible');
+    document.getElementById('activity-type').classList.remove('error');
+    document.getElementById('activity-val').classList.remove('error');
+
+    if (!type) {
+      document.getElementById('activity-err').classList.add('visible');
+      document.getElementById('activity-type').classList.add('error');
+      valid = false;
+    }
+    if (!val || parseFloat(val) < 0) {
+      document.getElementById('val-err').classList.add('visible');
+      document.getElementById('activity-val').classList.add('error');
+      valid = false;
+    }
+    if (!valid) return;
+
+    const btn = document.getElementById('log-btn-text').parentElement;
+    document.getElementById('log-btn-text').innerHTML = '<span class="loading-spinner"></span>';
+    btn.disabled = true;
+
+    setTimeout(() => {
+      document.getElementById('log-btn-text').textContent = 'Log';
+      btn.disabled = false;
+
+      const labels = { transport:'🚗 Car journey', cycling:'🚲 Cycling', vegetarian:'🥗 Vegetarian meal', flight:'✈️ Flight', energy:'💡 Energy saving' };
+      const co2Map = { transport: +val*0.171, cycling:0, vegetarian:-0.8, flight:+val*0.255, energy:-0.5 };
+      const co2 = (co2Map[type]||0).toFixed(1);
+      const sign = co2 > 0 ? '+' : '';
+
+      const list = document.getElementById('log-list');
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--accent-light);border-radius:6px;font-size:14px;animation:fadeIn 0.3s;';
+      row.innerHTML = `<span>${labels[type]} ${val} km/units</span><span style="color:${co2>0?'var(--danger)':'var(--success)'}">${sign}${co2} kg CO₂</span>`;
+      list.prepend(row);
+      setTimeout(()=>row.style.background='var(--surface2)',1200);
+
+      document.getElementById('activity-type').value = '';
+      document.getElementById('activity-val').value = '';
+      showToast('Activity logged successfully!', 'success');
+    }, 900);
+  }
+
+  // ── QUIZ ──
+  const quizData = [
+    { q:'What percentage of global greenhouse gas emissions comes from food production?', options:['Around 10%','Around 26%','Around 50%'], correct:1, explanation:'Food production accounts for ~26% of global emissions, with livestock being the largest contributor.' },
+    { q:'Which has the lowest carbon footprint per km?', options:['Electric car','Train','Bicycle'], correct:2, explanation:'Cycling produces zero direct emissions — only the manufacturing of the bike has a tiny footprint.' },
+    { q:'How much CO₂ can you save annually by switching from beef to plant-based meals once a week?', options:['Around 50 kg','Around 340 kg','Around 900 kg'], correct:1, explanation:'Beef is one of the most carbon-intensive foods. Replacing just one weekly meal saves ~340 kg CO₂/year.' }
+  ];
+  let currentQ = 0; let score = 0; let answered = false;
+
+  function answerQuiz(el, result) {
+    if (answered) return;
+    answered = true;
+    const data = quizData[currentQ];
+    el.classList.add(result);
+    const fb = document.getElementById('q' + (currentQ+1) + '-feedback') || document.getElementById('q1-feedback');
+
+    if (result === 'correct') {
+      score++;
+      fb.className = 'quiz-feedback visible correct-fb';
+      fb.textContent = '✅ Correct! ' + data.explanation;
+      showToast('Correct answer! 🎉', 'success');
+    } else {
+      fb.className = 'quiz-feedback visible wrong-fb';
+      fb.textContent = '❌ Not quite. ' + data.explanation;
+    }
+
+    setTimeout(() => {
+      currentQ++;
+      document.getElementById('q-num').textContent = Math.min(currentQ+1, quizData.length);
+      if (currentQ >= quizData.length) {
+        document.getElementById('quiz-container').style.display = 'none';
+        document.getElementById('score-val').textContent = score;
+        document.getElementById('quiz-score').style.display = 'block';
+        return;
+      }
+      const d = quizData[currentQ];
+      const qc = document.getElementById('quiz-container');
+      qc.innerHTML = `<div id="q${currentQ+1}" class="quiz-question">
+        <p style="font-weight:500;margin-bottom:12px;">${d.q}</p>
+        ${d.options.map((o,i)=>`<div class="quiz-option" tabindex="0" onclick="answerQuiz(this,'${i===d.correct?'correct':'wrong'}')" onkeypress="if(event.key==='Enter')answerQuiz(this,'${i===d.correct?'correct':'wrong'}')" role="button"><div class="quiz-dot"></div><span>${o}</span></div>`).join('')}
+        <div class="quiz-feedback" id="q${currentQ+1}-feedback"></div>
+      </div>`;
+      answered = false;
+    }, 1800);
+  }
+
+  function resetQuiz() {
+    currentQ = 0; score = 0; answered = false;
+    document.getElementById('q-num').textContent = '1';
+    document.getElementById('quiz-score').style.display = 'none';
+    document.getElementById('quiz-container').style.display = 'block';
+    const d = quizData[0];
+    document.getElementById('quiz-container').innerHTML = `<div id="q1" class="quiz-question">
+      <p style="font-weight:500;margin-bottom:12px;">${d.q}</p>
+      ${d.options.map((o,i)=>`<div class="quiz-option" tabindex="0" onclick="answerQuiz(this,'${i===d.correct?'correct':'wrong'}')" onkeypress="if(event.key==='Enter')answerQuiz(this,'${i===d.correct?'correct':'wrong'}')" role="button"><div class="quiz-dot"></div><span>${o}</span></div>`).join('')}
+      <div class="quiz-feedback" id="q1-feedback"></div>
+    </div>`;
+  }
+
+  // ── LOAD MORE TIPS ──
+  const extraTips = [
+    { icon:'♻️', title:'Recycling Right', text:'Contaminated recycling gets sent to landfill. Rinse containers and check your local council\'s accepted materials list.' },
+    { icon:'🌳', title:'Offset with Trees', text:'Plant one tree and it absorbs ~22 kg of CO₂ per year — a tiny cost for a meaningful contribution.' }
+  ];
+  let tipsLoaded = false;
+  function loadMoreTips() {
+    if (tipsLoaded) return;
+    const btn = document.getElementById('tips-load-btn');
+    document.getElementById('tips-btn-text').innerHTML = '<span class="loading-spinner" style="border-top-color:var(--accent)"></span>';
+    btn.disabled = true;
+    setTimeout(() => {
+      const container = document.getElementById('tips-container');
+      extraTips.forEach(t => {
+        const el = document.createElement('div');
+        el.className = 'hci-card';
+        el.style.borderColor = 'var(--accent2)';
+        el.innerHTML = `<h4>${t.icon} ${t.title}</h4><p>${t.text}</p>`;
+        container.insertBefore(el, btn);
+      });
+      btn.remove();
+      tipsLoaded = true;
+      showToast('2 new tips loaded!', 'success');
+    }, 800);
+  }
+
+  // ── REGISTRATION FORM ──
+  function submitRegistration() {
+    const name = document.getElementById('reg-name').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const age = document.getElementById('reg-age').value.trim();
+    const country = document.getElementById('reg-country').value;
+    const lifestyle = document.getElementById('reg-lifestyle').value;
+    const goal = document.getElementById('reg-goal').value;
+    const terms = document.getElementById('reg-terms').checked;
+    let valid = true;
+
+    // Clear all errors
+    document.querySelectorAll('#page-contact .error-msg').forEach(e => { e.classList.remove('visible'); e.style.display = 'none'; });
+    document.querySelectorAll('#page-contact input, #page-contact select').forEach(i => i.classList.remove('error'));
+
+    if (!name) { show('name-err'); document.getElementById('reg-name').classList.add('error'); valid = false; }
+    if (!email || !email.includes('@') || !email.includes('.')) { show('email-err'); document.getElementById('reg-email').classList.add('error'); valid = false; }
+    if (!age || parseInt(age) < 10 || parseInt(age) > 100) { show('age-err'); document.getElementById('reg-age').classList.add('error'); valid = false; }
+    if (!country) { show('country-err'); document.getElementById('reg-country').classList.add('error'); valid = false; }
+    if (!lifestyle) { show('lifestyle-err'); document.getElementById('reg-lifestyle').classList.add('error'); valid = false; }
+    if (!goal) { show('goal-err'); document.getElementById('reg-goal').classList.add('error'); valid = false; }
+    if (!terms) { show('terms-err'); valid = false; }
+
+    if (!valid) { showToast('Please fill in all required fields', 'error-t'); return; }
+
+    const btn = document.getElementById('reg-btn');
+    document.getElementById('reg-btn-text').innerHTML = '<span class="loading-spinner"></span> Creating account…';
+    btn.disabled = true;
+
+    setTimeout(() => {
+      document.getElementById('join-form-wrap').style.display = 'none';
+      document.getElementById('join-success').style.display = 'block';
+      showToast('Welcome to EcoTrack, ' + name + '! 🌱', 'success');
+    }, 1400);
+  }
+
+  function show(id) {
+    const el = document.getElementById(id);
+    if (el) { el.classList.add('visible'); el.style.display = 'block'; }
+  }
+
+  // ── MODAL ──
+  function showModal(id) { document.getElementById(id).classList.add('open'); document.getElementById('goal-input').focus(); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+  function addGoal() {
+    const val = document.getElementById('goal-input').value.trim();
+    if (!val) return;
+    const list = document.getElementById('goals-list');
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px;border:1.5px solid var(--border);border-radius:6px;animation:fadeIn 0.3s;';
+    const id = 'goal-' + Date.now();
+    div.innerHTML = `<input type="checkbox" id="${id}" style="width:18px;height:18px;cursor:pointer;" aria-label="Goal: ${val}"><label for="${id}" style="cursor:pointer;font-size:14px;">${val}</label>`;
+    list.appendChild(div);
+    closeModal('goal-modal');
+    document.getElementById('goal-input').value = '';
+    showToast('Goal added!', 'success');
+  }
+
+  // ── KEYBOARD SUPPORT ──
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    if (e.altKey && e.key === 'h') showPage('home');
+    if (e.altKey && e.key === 'd') showPage('dashboard');
+  });
+</script>
+</body>
+</html>
